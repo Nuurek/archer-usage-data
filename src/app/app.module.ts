@@ -1,5 +1,6 @@
+import { JobsModule } from './jobs/jobs.module';
+import { ChartComponent } from './jobs/chart/chart.component';
 import { HttpModule } from '@angular/http';
-import { JobsService } from './jobs.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -8,14 +9,12 @@ import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
-    NgxChartsModule,
-    HttpModule
+    JobsModule
   ],
-  providers: [JobsService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }
