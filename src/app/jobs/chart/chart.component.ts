@@ -7,13 +7,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chart.component.css']
 })
 export class ChartComponent implements OnInit {
-  jobs: Object[];
+  jobs: Object[] = [];
+
+  showXAxisLabel = true;
+  showYAxisLabel = true;
+  xAxisLabel = 'Memory usage [MB]';
+  yAxisLabel = 'Nodes [pc.]';
 
   public constructor(
     private jobsService: JobsService
   ) { }
 
   ngOnInit() {
-    this.jobsService.getJobs().then(jobs => this.jobs = jobs);
+    this.jobsService.getJobsByProject().then(jobs => this.jobs = jobs);
   }
 }

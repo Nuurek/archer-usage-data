@@ -1,3 +1,4 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JobsModule } from './jobs/jobs.module';
 import { ChartComponent } from './jobs/chart/chart.component';
 import { HttpModule } from '@angular/http';
@@ -13,7 +14,8 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    JobsModule
+    JobsModule,
+    BrowserAnimationsModule
   ],
   bootstrap: [AppComponent],
 })
