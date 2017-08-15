@@ -21,8 +21,25 @@ export class JobsService {
             .catch(this.handleError);
     }
 
-    public getJobsByProject(): Promise<Object[]> {
+    private getPartialJobs(fraction: number, timeFrameWidthAsFraction: number): Promise<Object[]> {
         return this.getRawJobs()
+            .then(jobs => jobs
+                .reduce((acc, job) => {
+                    acc['min'] = (acc['min'] === undefined || job['timestamp'] < acc['min']) ? job['timestamp'] : acc['min'];
+                    acc['max'] = (acc['max'] === undefined || job['timestamp'] > acc['max']) ? job['timestamp'] : acc['max'];
+                    acc['jobsInterval'] = acc['max'] - acc['min'];
+                    acc['timeFrameWidth'] = acc['jobsInterval'] * timeFrameWidthAsFraction;
+                    acc['frameStart'] = new Date(acc['min'].getTime() + fraction * acc['jobsInterval'] - acc['timeFrameWidth'] / 2);
+                    acc['frameEnd'] = new Date(acc['frameStart'].getTime() + acc['timeFrameWidth']);
+                    return acc;
+                }, jobs) as Object[])
+            .then(jobs => jobs
+                .filter(job => job['timestamp'] >= jobs['frameStart'] && job['timestamp'] <= jobs['frameEnd'])
+            );
+    }
+
+    public getJobsByProject(fraction: number, timeFrameWidthAsFraction: number): Promise<Object[]> {
+        return this.getPartialJobs(fraction, timeFrameWidthAsFraction)
             .then(jobs => jobs
                 .reduce((acc, job) => {
                     const key: string = job['project']['name'];
