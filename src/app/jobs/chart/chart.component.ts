@@ -1,11 +1,12 @@
 import { JobsService } from '../jobs.service';
 import { Component, OnInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { NouisliderComponent } from 'ng2-nouislider';
 
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
-  styleUrls: ['./chart.component.css']
+  styleUrls: ['./chart.component.scss']
 })
 export class ChartComponent implements OnInit {
   jobs: Object[] = [];
@@ -30,7 +31,7 @@ export class ChartComponent implements OnInit {
   ngOnInit() {
     this.updateJobs();
   }
-
+  
   private updateJobs() {
     this.jobsService.getJobsByProject(this.fraction, this.frameWidth).then(jobs => this.jobs = jobs);
   }

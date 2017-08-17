@@ -4,11 +4,14 @@ import { JobsService } from './jobs.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartComponent } from './chart/chart.component';
+import { NouisliderModule } from 'ng2-nouislider';
+
 
 @NgModule({
   imports: [
     CommonModule,
     BubbleChartModule,
+    NouisliderModule,
     HttpModule
   ],
   declarations: [
