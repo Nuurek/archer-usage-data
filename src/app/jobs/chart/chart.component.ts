@@ -17,7 +17,7 @@ class ChartOptions {
   ];
 
   classOptions = [
-    { value: 'project_name' , name: 'Project' },
+    { value: 'project_name', name: 'Project' },
     { value: 'research_area', name: 'Research Area' },
     { value: 'institution', name: 'Institution' },
     { value: 'application_name', name: 'Application Name' },
@@ -27,11 +27,11 @@ class ChartOptions {
   ]
 
   axisOptions = [
-    { value: 'nodes' , name: 'Nodes [pc.]' },
-    { value: 'memory' , name: 'Memory [MB]' },
-    { value: 'energy' , name: 'Energy [Wh]' },
-    { value: 'runtime' , name: 'Runtime [s]' },
-    { value: 'queue_time' , name: 'Queue time [s]' }
+    { value: 'nodes', name: 'Nodes [pc.]' },
+    { value: 'memory', name: 'Memory [MB]' },
+    { value: 'energy', name: 'Energy [Wh]' },
+    { value: 'runtime', name: 'Runtime [s]' },
+    { value: 'queue_time', name: 'Queue time [s]' }
   ];
 }
 
@@ -81,6 +81,7 @@ export class ChartComponent implements OnInit {
 
   private onChartChanges(data) {
     this.patchDistinctFields(data);
+    this.updateJobs();
   }
 
   private patchDistinctFields(data) {
@@ -104,13 +105,14 @@ export class ChartComponent implements OnInit {
       };
     });
 
-    this.chartForm.patchValue(data, {emitEvent: false});
+    this.chartForm.patchValue(data, { emitEvent: false });
     // update settings so that it can be compared after next change
     this.settings = this.chartForm.getRawValue();
   }
 
   ngOnInit() {
     this.updateJobs();
+    this.jobsService.getJobs(this.settings);
   }
 
   onChange(value: any) {
@@ -119,6 +121,7 @@ export class ChartComponent implements OnInit {
   }
 
   private updateJobs() {
-    this.jobsService.getJobsByProject(this.fraction, this.frameWidth).then(jobs => this.jobs = jobs);
+    // this.jobsService.getJobsByProject(this.fraction, this.frameWidth).then(jobs => this.jobs = jobs);
+    this.jobsService.getJobs(this.settings).then(jobs => this.jobs = jobs);
   }
 }
