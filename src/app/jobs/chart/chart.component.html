@@ -1,14 +1,74 @@
-<div class="bubble-chart container">
-    <ngx-charts-bubble-chart
-        [view]="[800, 400]"
-        [results]="jobs"
-        [autoScale]="false"
-        [showXAxisLabel]="showXAxisLabel"
-        [showYAxisLabel]="showYAxisLabel"
-        [xAxisLabel]="xAxisLabel"
-        [yAxisLabel]="yAxisLabel"
-    ></ngx-charts-bubble-chart>
-    <div class="container">
+<div class="row">
+    <div class="col s3">
+        <form materialize class="container">
+            <div class="row">
+                <div class="input-field col s12">
+                    <select
+                        name="period"
+                        [(ngModel)]="settings.period" 
+                        materialize="material_select"
+                        [materializeSelectOptions]="settings.periodOptions"
+                    >
+                        <option *ngFor="let option of settings.periodOptions" [value]="option.value">{{option.name}}</option>
+                    </select>
+                    <label>Period</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <select
+                        name="dataClass"
+                        [(ngModel)]="settings.dataClass" 
+                        materialize="material_select"
+                        [materializeSelectOptions]="settings.classOptions"
+                    >
+                        <option *ngFor="let option of settings.classOptions" [value]="option.value">{{option.name}}</option>
+                    </select>
+                    <label>Class</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <select
+                        name="xAxis"
+                        [(ngModel)]="settings.xAxis" 
+                        materialize="material_select"
+                        [materializeSelectOptions]="settings.axisOptions"
+                    >
+                        <option *ngFor="let option of settings.axisOptions" [value]="option.value">{{option.name}}</option>
+                    </select>
+                    <label>X Axis</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <select
+                        name="yAxis"
+                        [(ngModel)]="settings.yAxis" 
+                        materialize="material_select"
+                        [materializeSelectOptions]="settings.axisOptions"
+                    >
+                        <option *ngFor="let option of settings.axisOptions" [value]="option.value">{{option.name}}</option>
+                    </select>
+                    <label>Y Axis</label>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col s9">
+        <div class="bubble-chart container">
+            <ngx-charts-bubble-chart
+                [view]="[800, 400]"
+                [results]="jobs"
+                [autoScale]="false"
+                [showXAxisLabel]="showXAxisLabel"
+                [showYAxisLabel]="showYAxisLabel"
+                [xAxisLabel]="xAxisLabel"
+                [yAxisLabel]="yAxisLabel"
+            ></ngx-charts-bubble-chart>
+            <div class="container">
+            </div>
+        </div>
     </div>
 </div>
 <div class="container">

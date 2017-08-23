@@ -1,4 +1,4 @@
-import { MaterializeModule } from 'angular2-materialize/dist';
+import { MaterializeModule } from 'angular2-materialize';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JobsModule } from './jobs/jobs.module';
 import { ChartComponent } from './jobs/chart/chart.component';
@@ -15,9 +15,9 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     MaterializeModule,
-    JobsModule,
-    BrowserAnimationsModule
+    JobsModule
   ],
   bootstrap: [AppComponent],
 })
