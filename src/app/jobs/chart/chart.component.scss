@@ -1,7 +1,5 @@
-.bubble-chart-container {
+.bubble-chart.container {
     display: flex;
-
-    ngx-charts-bubble-chart {
-        margin: 0 auto;
-    }
+    flex-direction: column;
+    align-items: center;
 }

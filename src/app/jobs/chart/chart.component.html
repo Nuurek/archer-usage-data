@@ -1,4 +1,4 @@
-<div class="bubble-chart-container">
+<div class="bubble-chart container">
     <ngx-charts-bubble-chart
         [view]="[800, 400]"
         [results]="jobs"
@@ -7,6 +7,10 @@
         [showYAxisLabel]="showYAxisLabel"
         [xAxisLabel]="xAxisLabel"
         [yAxisLabel]="yAxisLabel"
-    >
-    </ngx-charts-bubble-chart>
+    ></ngx-charts-bubble-chart>
+    <div class="container">
+    </div>
+</div>
+<div class="container">
+    <nouislider [connect]="true" [min]="0" [max]="15" [(ngModel)]="someRange" (change)="onChange($event)"></nouislider>
 </div>
