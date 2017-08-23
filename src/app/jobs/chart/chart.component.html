@@ -1,15 +1,14 @@
-<div class="row">
+<div class="row valign-wrapper">
     <div class="col s3">
-        <form materialize class="container">
+        <form [formGroup]="chartForm" materialize class="container">
             <div class="row">
                 <div class="input-field col s12">
                     <select
-                        name="period"
-                        [(ngModel)]="settings.period" 
+                        formControlName="period"
                         materialize="material_select"
-                        [materializeSelectOptions]="settings.periodOptions"
+                        [materializeSelectOptions]="chartOptions.periodOptions"
                     >
-                        <option *ngFor="let option of settings.periodOptions" [value]="option.value">{{option.name}}</option>
+                        <option *ngFor="let option of chartOptions.periodOptions" [value]="option.value">{{option.name}}</option>
                     </select>
                     <label>Period</label>
                 </div>
@@ -17,12 +16,11 @@
             <div class="row">
                 <div class="input-field col s12">
                     <select
-                        name="dataClass"
-                        [(ngModel)]="settings.dataClass" 
+                        formControlName="dataClass"
                         materialize="material_select"
-                        [materializeSelectOptions]="settings.classOptions"
+                        [materializeSelectOptions]="chartOptions.classOptions"
                     >
-                        <option *ngFor="let option of settings.classOptions" [value]="option.value">{{option.name}}</option>
+                        <option *ngFor="let option of chartOptions.classOptions" [value]="option.value">{{option.name}}</option>
                     </select>
                     <label>Class</label>
                 </div>
@@ -30,12 +28,11 @@
             <div class="row">
                 <div class="input-field col s12">
                     <select
-                        name="xAxis"
-                        [(ngModel)]="settings.xAxis" 
+                        formControlName="xAxis"
                         materialize="material_select"
-                        [materializeSelectOptions]="settings.axisOptions"
+                        [materializeSelectOptions]="chartOptions.axisOptions"
                     >
-                        <option *ngFor="let option of settings.axisOptions" [value]="option.value">{{option.name}}</option>
+                        <option *ngFor="let option of chartOptions.axisOptions" [value]="option.value">{{option.name}}</option>
                     </select>
                     <label>X Axis</label>
                 </div>
@@ -43,14 +40,25 @@
             <div class="row">
                 <div class="input-field col s12">
                     <select
-                        name="yAxis"
-                        [(ngModel)]="settings.yAxis" 
+                        formControlName="yAxis"
                         materialize="material_select"
-                        [materializeSelectOptions]="settings.axisOptions"
+                        [materializeSelectOptions]="chartOptions.axisOptions"
                     >
-                        <option *ngFor="let option of settings.axisOptions" [value]="option.value">{{option.name}}</option>
+                        <option *ngFor="let option of chartOptions.axisOptions" [value]="option.value">{{option.name}}</option>
                     </select>
                     <label>Y Axis</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <select
+                        formControlName="bubbleSize"
+                        materialize="material_select"
+                        [materializeSelectOptions]="chartOptions.axisOptions"
+                    >
+                        <option *ngFor="let option of chartOptions.axisOptions" [value]="option.value">{{option.name}}</option>
+                    </select>
+                    <label>Bubble Size</label>
                 </div>
             </div>
         </form>
