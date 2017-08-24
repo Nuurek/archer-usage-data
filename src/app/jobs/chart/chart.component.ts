@@ -1,8 +1,9 @@
+import { SimpleChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 import { JobOptions } from '../jobs-options';
 import { distinct } from 'rxjs/operator/distinct';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { JobsService } from '../jobs.service';
-import { Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, AfterContentInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { NouisliderComponent } from 'ng2-nouislider';
 import { MaterializeDirective } from 'angular2-materialize';
@@ -14,7 +15,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.scss']
 })
-export class ChartComponent implements OnInit {
+export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
   jobs: Object[] = [];
 
   public fraction = 0.05;
@@ -23,6 +24,8 @@ export class ChartComponent implements OnInit {
   showYAxisLabel = true;
   xAxisLabel = 'Memory usage [MB]';
   yAxisLabel = 'Nodes [pc.]';
+  minTimeStamp = 0;
+  maxTimeStamp = 20;
   public disabled = false;
 
   public someRange: number[] = [3, 6];
@@ -34,7 +37,8 @@ export class ChartComponent implements OnInit {
 
   public constructor(
     private jobsService: JobsService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private ref: ChangeDetectorRef
   ) {
     this.createForm();
   }
@@ -88,19 +92,42 @@ export class ChartComponent implements OnInit {
   }
 
   private onPeriodChanges(data) {
-    this.jobsService.getPeriodResolutionInSeconds(this.chartForm.getRawValue())
-      .then(resolution => {this.periodResolution = resolution; console.log(this.periodResolution)});
+    this.updatePeriodSettings();
+  }
+
+  private updatePeriodSettings() {
+    this.jobsService.getPeriodSettings(this.chartForm.getRawValue())
+      .then(periodSettings => {
+        const oldStartFraction = this.someRange[0] / this.maxTimeStamp;
+        const oldEndFraction = this.someRange[1] / this.maxTimeStamp;
+
+        this.periodResolution = periodSettings['resolution'] / 60;
+        this.minTimeStamp = 0
+        const periodInMillieconds = new Date(periodSettings['max']).getTime() - new Date(periodSettings['min']).getTime();
+        this.maxTimeStamp = periodInMillieconds / (1000 * 60 * this.periodResolution);
+        this.someRange = [
+          Math.round(oldStartFraction * this.maxTimeStamp),
+          Math.round(oldEndFraction * this.maxTimeStamp)
+        ];
+      });
   }
 
   ngOnInit() {
-    this.updateJobs();
   }
 
-  onChange(value: any) {
-    this.someRange = value;
+  ngAfterContentInit() {
+    this.updateJobs();
+    this.updatePeriodSettings();
+    this.ref.markForCheck();
+  }
+
+  ngOnChanges(changes: SimpleChanges)	{
+    console.log(changes);
   }
 
   private updateJobs() {
-    this.jobsService.getJobs(this.settings).then(jobs => this.jobs = jobs);
+    this.jobsService.getJobs(this.settings).then(jobs => {
+      this.jobs = jobs;
+    });
   }
 }

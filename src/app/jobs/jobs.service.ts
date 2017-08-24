@@ -55,9 +55,35 @@ export class JobsService {
             .catch(this.handleError);
     }
 
-    public getPeriodResolutionInSeconds(settings: Object) {
+    public getPeriodSettings(settings: Object) {
         return this.getRawData(settings)
-            .then(response => response.json().resolution_in_minutes * 60)
+            .then(response => {
+                const object = response.json();
+                const periodSettings = object.jobs.reduce((acc, job) => {
+                    acc['min'] = (acc['min'] === undefined || job['timestamp'] < acc['min']) ? job['timestamp'] : acc['min'];
+                    acc['max'] = (acc['max'] === undefined || job['timestamp'] > acc['max']) ? job['timestamp'] : acc['max'];
+                    return acc;
+                }, {});
+                periodSettings['resolution'] = object.resolution_in_minutes * 60;
+                return periodSettings;
+            })
             .catch(this.handleError);
+    }
+
+    public getPartialJobs(settings: Object, fraction: number, timeFrameWidthAsFraction: number): Promise<Object[]> {
+        return this.getJobs(settings)
+            .then(jobs => jobs
+                .reduce((acc, job) => {
+                    acc['min'] = (acc['min'] === undefined || job['timestamp'] < acc['min']) ? job['timestamp'] : acc['min'];
+                    acc['max'] = (acc['max'] === undefined || job['timestamp'] > acc['max']) ? job['timestamp'] : acc['max'];
+                    acc['jobsInterval'] = acc['max'] - acc['min'];
+                    acc['timeFrameWidth'] = acc['jobsInterval'] * timeFrameWidthAsFraction;
+                    acc['frameStart'] = new Date(acc['min'].getTime() + fraction * acc['jobsInterval'] - acc['timeFrameWidth'] / 2);
+                    acc['frameEnd'] = new Date(acc['frameStart'].getTime() + acc['timeFrameWidth']);
+                    return acc;
+                }, jobs) as Object[])
+            .then(jobs => jobs
+                .filter(job => job['timestamp'] >= jobs['frameStart'] && job['timestamp'] <= jobs['frameEnd'])
+            );
     }
 }

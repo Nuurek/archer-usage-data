@@ -80,5 +80,11 @@
     </div>
 </div>
 <div class="container">
-    <nouislider [connect]="true" [min]="0" [max]="15" [(ngModel)]="someRange" (change)="onChange($event)"></nouislider>
+    <nouislider 
+        [connect]="true"
+        [min]="minTimeStamp"
+        [max]="maxTimeStamp"
+        [step]="1"
+        [(ngModel)]="someRange"
+    ></nouislider>
 </div>
