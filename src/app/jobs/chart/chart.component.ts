@@ -19,7 +19,7 @@ export class LocaleDateTimeFormatter implements NouiFormatter {
 
   from(value: string): number {
     return 0;
-  }
+  };
 }
 
 @Component({
@@ -36,6 +36,9 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
   showYAxisLabel = true;
   xAxisLabel = 'Memory usage [MB]';
   yAxisLabel = 'Nodes [pc.]';
+
+  distinctFields = ['xAxis', 'yAxis', 'bubbleSize'];
+
   public disabled = false;
   @ViewChild('sliderRef') sliderRef: ElementRef | any;
   sliderConfig = {
@@ -75,6 +78,7 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
     };
     this.chartForm = this.formBuilder.group(initialValues);
     this.settings = this.chartForm.getRawValue();
+
     this.chartForm.valueChanges
       .distinctUntilChanged()
       .subscribe(data => this.onChartChanges(data));
@@ -84,21 +88,20 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
 
   private onChartChanges(data) {
     this.patchDistinctFields(data);
-    this.updateJobs();
+    this.updateJobs(data);
     // update settings so that it can be compared after next change
     this.settings = this.chartForm.getRawValue();
   }
 
   private patchDistinctFields(data) {
     const changes = Object.keys(data).filter(key => data[key] !== this.settings[key]);
-    const distinctFields = ['xAxis', 'yAxis', 'bubbleSize'];
 
     changes.map(change => {
       // if one of distinct fields changed
-      if (distinctFields.includes(change)) {
+      if (this.distinctFields.includes(change)) {
         // if one or more distinct fields have the same value push them to colliders array
         const colliders = [];
-        distinctFields.reduce((acc, key) => {
+        this.distinctFields.reduce((acc, key) => {
           if (key !== change && data[key] === data[change]) {
             acc.push(key);
           }
@@ -149,7 +152,7 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
   }
 
   ngAfterContentInit() {
-    this.updateJobs();
+    this.updateJobs(this.chartForm.getRawValue());
     this.updatePeriodSettings();
     this.ref.markForCheck();
   }
@@ -158,9 +161,15 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
     console.log(changes);
   }
 
-  private updateJobs() {
+  private updateJobs(data) {
     this.jobsService.getJobs(this.settings).then(jobs => {
+      this.xAxisLabel = this.getAxisName(data['xAxis']);
+      this.yAxisLabel = this.getAxisName(data['yAxis']);
       this.jobs = jobs;
     });
+  }
+
+  private getAxisName(value: string) {
+    return this.chartOptions.axisOptions.filter(option => option['value'] === value)[0]['name'];
   }
 }
