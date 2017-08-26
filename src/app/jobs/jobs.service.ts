@@ -19,7 +19,6 @@ export class JobsService {
     }
 
     public getJobs(settings: Object, range: number[]): Promise<Object[]> {
-        console.log(range);
         return this.getRawData(settings)
             .then(response => response.json().jobs.map(
                 job => {

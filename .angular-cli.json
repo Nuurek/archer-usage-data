@@ -20,7 +20,7 @@
       "prefix": "app",
       "styles": [
         "styles.scss",
-        "../node_modules/materialize-css/sass/materialize.scss"
+        "../node_modules/materialize-css/dist/css/materialize.min.css"
       ],
       "scripts": [
         "../node_modules/jquery/dist/jquery.js",

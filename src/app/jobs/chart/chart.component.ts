@@ -36,6 +36,13 @@ export class ChartComponent implements OnInit, AfterContentInit {
   showYAxisLabel = true;
   xAxisLabel = 'Memory usage [MB]';
   yAxisLabel = 'Nodes [pc.]';
+  colorScheme = {
+    domain: [
+      '#3FB8AF', '#EA3546', '#084C61', '#F9C80E', '#F87337',
+      '#2E8680', '#D53140', '#063847', '#FCE691', '#FBBFA4',
+      '#A7DEDA', '#F3909A', '#4B7C8C', '#FAD74F', '#F9996D'
+    ]
+  }
 
   distinctFields = ['xAxis', 'yAxis', 'bubbleSize'];
 
