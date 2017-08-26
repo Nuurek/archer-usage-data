@@ -1,9 +1,10 @@
+import { DefaultFormatter, NouisliderModule } from 'ng2-nouislider/src/nouislider';
 import { SimpleChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 import { JobOptions } from '../jobs-options';
 import { distinct } from 'rxjs/operator/distinct';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { JobsService } from '../jobs.service';
-import { Component, OnInit, OnChanges, AfterContentInit } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { NouisliderComponent } from 'ng2-nouislider';
 import { MaterializeDirective } from 'angular2-materialize';
@@ -24,11 +25,20 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
   showYAxisLabel = true;
   xAxisLabel = 'Memory usage [MB]';
   yAxisLabel = 'Nodes [pc.]';
-  minTimeStamp = 0;
-  maxTimeStamp = 20;
   public disabled = false;
+  @ViewChild('sliderRef') sliderRef: ElementRef | any;
+  sliderConfig = {
+    formatter: DefaultFormatter,
+    connect: true,
+    range: {
+      'min': [ 0 ],
+      'max': [ 1 ]
+    },
+    start: [],
+    step: 1
+  }
 
-  public someRange: number[] = [3, 6];
+  public range: number[] = [0, 1];
   periodResolution: number;
 
   chartOptions = new JobOptions();
@@ -98,17 +108,28 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
   private updatePeriodSettings() {
     this.jobsService.getPeriodSettings(this.chartForm.getRawValue())
       .then(periodSettings => {
-        const oldStartFraction = this.someRange[0] / this.maxTimeStamp;
-        const oldEndFraction = this.someRange[1] / this.maxTimeStamp;
+        const oldMinTimestamp = this.sliderConfig['range']['min'][0];
+        const oldMaxTimestamp = this.sliderConfig['range']['max'][0];
+        const oldPeriod = (oldMaxTimestamp - oldMinTimestamp);
+        const oldStartFraction = (this.range[0] - oldMinTimestamp) / oldPeriod;
+        const oldEndFraction = (this.range[1] - oldMinTimestamp) / oldPeriod;
 
-        this.periodResolution = periodSettings['resolution'] / 60;
-        this.minTimeStamp = 0
-        const periodInMillieconds = new Date(periodSettings['max']).getTime() - new Date(periodSettings['min']).getTime();
-        this.maxTimeStamp = periodInMillieconds / (1000 * 60 * this.periodResolution);
-        this.someRange = [
-          Math.round(oldStartFraction * this.maxTimeStamp),
-          Math.round(oldEndFraction * this.maxTimeStamp)
+        const minTimestamp = new Date(periodSettings['min']).getTime();
+        const maxTimestamp = new Date(periodSettings['max']).getTime();
+        this.sliderConfig['range']['min'] = [ minTimestamp ];
+        this.sliderConfig['range']['max'] = [ maxTimestamp ];
+
+        const resolution = periodSettings['resolution'] * 1000
+        this.sliderConfig['step'] = resolution;
+
+        const period = maxTimestamp - minTimestamp;
+        this.range = [
+          Math.round((Math.round(minTimestamp + oldStartFraction * period) / resolution)) * resolution,
+          Math.round((Math.round(minTimestamp + oldEndFraction * period) / resolution)) * resolution
         ];
+        this.sliderConfig['start'] = this.range;
+
+        this.sliderRef.slider.updateOptions(this.sliderConfig);
       });
   }
 

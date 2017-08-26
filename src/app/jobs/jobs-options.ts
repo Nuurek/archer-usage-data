@@ -5,6 +5,7 @@ export class JobOptions {
     { value: 'last_30_days', name: 'Last 30 Days' }
   ];
 
+  // properties
   classOptions = [
     { value: 'project_name' , name: 'Project' },
     { value: 'research_area', name: 'Research Area' },
