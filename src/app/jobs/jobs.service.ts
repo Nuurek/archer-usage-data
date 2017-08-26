@@ -6,6 +6,11 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class JobsService {
+    private axisMapping = {
+        x: 'xAxis',
+        y: 'yAxis',
+        r: 'bubbleSize'
+    }
 
     constructor(private http: Http) { }
 
@@ -54,17 +59,22 @@ export class JobsService {
                     return group;
                 })
             )
-            /*
             .then(groups => groups
                 .map(group => {
-                    console.log(group);
-                    group['series'][0]['x'] = group['series'][0]['x'] / group['series'][0]['number_of_jobs'];
-                    group['series'][0]['y'] = group['series'][0]['y'] / group['series'][0]['number_of_jobs'];
-                    group['series'][0]['r'] = group['series'][0]['r'] / group['series'][0]['number_of_jobs'];
+                    const series = {};
+                    Object.keys(group['series'][0])
+                        .map(axis => {
+                            const func = settings[this.axisMapping[axis] + 'Function'];
+                            if (func === 'avg') {
+                                series[axis] = group['series'][0][axis] / group['series'][0]['number_of_jobs'];
+                            } else {
+                                series[axis] = group['series'][0][axis];
+                            }
+                        })
+                    group['series'][0] = series;
                     return group;
                 })
             )
-            */
             .catch(this.handleError);
     }
 
@@ -81,22 +91,5 @@ export class JobsService {
                 return periodSettings;
             })
             .catch(this.handleError);
-    }
-
-    public getPartialJobs(settings: Object, fraction: number, timeFrameWidthAsFraction: number): Promise<Object[]> {
-        return this.getJobs(settings, [0, 1])
-            .then(jobs => jobs
-                .reduce((acc, job) => {
-                    acc['min'] = (acc['min'] === undefined || job['timestamp'] < acc['min']) ? job['timestamp'] : acc['min'];
-                    acc['max'] = (acc['max'] === undefined || job['timestamp'] > acc['max']) ? job['timestamp'] : acc['max'];
-                    acc['jobsInterval'] = acc['max'] - acc['min'];
-                    acc['timeFrameWidth'] = acc['jobsInterval'] * timeFrameWidthAsFraction;
-                    acc['frameStart'] = new Date(acc['min'].getTime() + fraction * acc['jobsInterval'] - acc['timeFrameWidth'] / 2);
-                    acc['frameEnd'] = new Date(acc['frameStart'].getTime() + acc['timeFrameWidth']);
-                    return acc;
-                }, jobs) as Object[])
-            .then(jobs => jobs
-                .filter(job => job['timestamp'] >= jobs['frameStart'] && job['timestamp'] <= jobs['frameEnd'])
-            );
     }
 }

@@ -1,90 +1,91 @@
 <div class="row valign-wrapper">
-    <div class="col s3">
+    <div class="col s4">
         <form [formGroup]="chartForm" materialize class="container">
             <div class="row">
                 <div class="input-field col s12">
-                    <select
-                        formControlName="period"
-                        materialize="material_select"
-                        [materializeSelectOptions]="chartOptions.periodOptions"
-                    >
-                        <option *ngFor="let option of chartOptions.periodOptions" [value]="option.value">{{option.name}}</option>
-                    </select>
+                    <select formControlName="period" materialize="material_select" [materializeSelectOptions]="chartOptions.periodOptions">
+                            <option *ngFor="let option of chartOptions.periodOptions" [value]="option.value">{{option.name}}</option>
+                        </select>
                     <label>Period</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <select
-                        formControlName="property"
-                        materialize="material_select"
-                        [materializeSelectOptions]="chartOptions.propertyOptions"
-                    >
-                        <option 
-                            *ngFor="let option of chartOptions.propertyOptions"
-                            [value]="option.value"
-                        >{{option.name}}</option>
-                    </select>
+                    <select formControlName="property" materialize="material_select" [materializeSelectOptions]="chartOptions.propertyOptions">
+                            <option 
+                                *ngFor="let option of chartOptions.propertyOptions"
+                                [value]="option.value"
+                            >{{option.name}}</option>
+                        </select>
                     <label>Property</label>
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s12">
-                    <select
-                        formControlName="xAxis"
-                        materialize="material_select"
-                        [materializeSelectOptions]="chartOptions.axisOptions"
-                    >
+                <div class="input-field col s8">
+                    <select formControlName="xAxis" materialize="material_select" [materializeSelectOptions]="chartOptions.axisOptions">
                         <option
                             *ngFor="let option of chartOptions.axisOptions"
                             [value]="option.value"
                         >{{option.name}}</option>
                     </select>
                     <label>X Axis</label>
-                    
+                </div>
+                <div class="col s4">
+                    <p>
+                        <input formControlName="xAxisFunction" type="radio" id="xAxisSum" value="sum" />
+                        <label for="xAxisSum">Sum</label>
+                    </p>
+                    <p>
+                        <input formControlName="xAxisFunction" type="radio" id="xAxisAvg" value="avg" />
+                        <label for="xAxisAvg">Avg.</label>
+                    </p>
                 </div>
             </div>
+            <div class="divider"></div>
             <div class="row">
-                <div class="input-field col s12">
-                    <select
-                        formControlName="yAxis"
-                        materialize="material_select"
-                        [materializeSelectOptions]="chartOptions.axisOptions"
-                    >
+                <div class="input-field col s8">
+                    <select formControlName="yAxis" materialize="material_select" [materializeSelectOptions]="chartOptions.axisOptions">
                         <option *ngFor="let option of chartOptions.axisOptions" [value]="option.value">{{option.name}}</option>
                     </select>
                     <label>Y Axis</label>
                 </div>
+                <div class="col s4">
+                    <p>
+                        <input formControlName="yAxisFunction" type="radio" id="yAxisSum" value="sum" />
+                        <label for="yAxisSum">Sum</label>
+                    </p>
+                    <p>
+                        <input formControlName="yAxisFunction" type="radio" id="yAxisAvg" value="avg" />
+                        <label for="yAxisAvg">Avg.</label>
+                    </p>
+                </div>
             </div>
+            <div class="divider"></div>
             <div class="row">
-                <div class="input-field col s12">
-                    <select
-                        formControlName="bubbleSize"
-                        materialize="material_select"
-                        [materializeSelectOptions]="chartOptions.axisOptions"
-                    >
+                <div class="input-field col s8">
+                    <select formControlName="bubbleSize" materialize="material_select" [materializeSelectOptions]="chartOptions.axisOptions">
                         <option *ngFor="let option of chartOptions.axisOptions" [value]="option.value">{{option.name}}</option>
                     </select>
                     <label>Bubble Size</label>
+                </div>
+                <div class="col s4">
+                    <p>
+                        <input formControlName="bubbleSizeFunction" type="radio" id="bubbleSizeSum" value="sum" />
+                        <label for="bubbleSizeSum">Sum</label>
+                    </p>
+                    <p>
+                        <input formControlName="bubbleSizeFunction" type="radio" id="bubbleSizeAvg" value="avg" />
+                        <label for="bubbleSizeAvg">Avg.</label>
+                    </p>
                 </div>
             </div>
         </form>
     </div>
     <div class="col s9">
         <div class="bubble-chart container">
-            <ngx-charts-bubble-chart #bubbleChart
-                [view]="[800, 500]"
-                [results]="jobs"
-                [autoScale]="true"
-                [showXAxisLabel]="showXAxisLabel"
-                [showYAxisLabel]="showYAxisLabel"
-                [xAxisLabel]="xAxisLabel"
-                [yAxisLabel]="yAxisLabel"
-                [minRadius]="5"
-                [maxRadius]="30"
-                [scheme]="colorScheme"
-                [legend]="true"
-            >
+            <ngx-charts-bubble-chart #bubbleChart [view]="[800, 500]" [results]="jobs" [autoScale]="true" [showXAxisLabel]="showXAxisLabel"
+                [showYAxisLabel]="showYAxisLabel" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel" [minRadius]="5" [maxRadius]="30"
+                [scheme]="colorScheme" [legend]="true">
                 <ng-template #tooltipTemplate let-model="model">
                     <div class="tooltip">
                         <p class="title">
@@ -106,10 +107,6 @@
 </div>
 <div class="row slider-row">
     <div class="container">
-        <nouislider #sliderRef
-            [config]="sliderConfig"
-            [(ngModel)]="range"
-            (ngModelChange)="onSliderChanges($event)"
-        ></nouislider>
+        <nouislider #sliderRef [config]="sliderConfig" [(ngModel)]="range" (ngModelChange)="onSliderChanges($event)"></nouislider>
     </div>
 </div>

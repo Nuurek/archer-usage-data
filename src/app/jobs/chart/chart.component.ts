@@ -80,8 +80,11 @@ export class ChartComponent implements OnInit, AfterContentInit {
       period: this.chartOptions.periodOptions[0].value,
       property: this.chartOptions.propertyOptions[0].value,
       xAxis: this.chartOptions.axisOptions[0].value,
+      xAxisFunction: 'sum',
       yAxis: this.chartOptions.axisOptions[1].value,
-      bubbleSize: this.chartOptions.axisOptions[2].value
+      yAxisFunction: 'avg',
+      bubbleSize: this.chartOptions.axisOptions[2].value,
+      bubbleSizeFunction: 'avg'
     };
     this.chartForm = this.formBuilder.group(initialValues);
     this.settings = this.chartForm.getRawValue();
@@ -93,6 +96,7 @@ export class ChartComponent implements OnInit, AfterContentInit {
   }
 
   private onChartChanges(data) {
+    console.log(data);
     this.patchDistinctFields(data);
     this.updateJobs();
     // update settings so that it can be compared after next change
