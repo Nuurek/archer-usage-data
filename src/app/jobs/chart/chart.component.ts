@@ -27,7 +27,7 @@ export class LocaleDateTimeFormatter implements NouiFormatter {
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.scss']
 })
-export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
+export class ChartComponent implements OnInit, AfterContentInit {
   jobs: Object[] = [];
 
   public fraction = 0.05;
@@ -87,7 +87,7 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
 
   private onChartChanges(data) {
     this.patchDistinctFields(data);
-    this.updateJobs(data);
+    this.updateJobs();
     // update settings so that it can be compared after next change
     this.settings = this.chartForm.getRawValue();
   }
@@ -151,18 +151,19 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
   }
 
   ngAfterContentInit() {
-    this.updateJobs(this.chartForm.getRawValue());
     this.updatePeriodSettings();
+    this.updateJobs();
     this.ref.markForCheck();
   }
 
-  ngOnChanges(changes: SimpleChanges)	{
+  onSliderChanges(event: any) {
+    this.updateJobs();
   }
 
-  private updateJobs(data) {
-    this.jobsService.getJobs(data).then(jobs => {
-      this.xAxisLabel = this.getAxisName(data['xAxis']);
-      this.yAxisLabel = this.getAxisName(data['yAxis']);
+  private updateJobs() {
+    this.jobsService.getJobs(this.chartForm.getRawValue(), this.range).then(jobs => {
+      this.xAxisLabel = this.getAxisName(this.chartForm.controls['xAxis'].value);
+      this.yAxisLabel = this.getAxisName(this.chartForm.controls['yAxis'].value);
       this.jobs = jobs;
     });
   }

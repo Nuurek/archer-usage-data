@@ -73,7 +73,7 @@
                 [showYAxisLabel]="showYAxisLabel"
                 [xAxisLabel]="xAxisLabel"
                 [yAxisLabel]="yAxisLabel"
-                [minRadius]="20"
+                [minRadius]="5"
                 [maxRadius]="30"
             >
                 <ng-template #tooltipTemplate let-model="model">
@@ -100,6 +100,7 @@
         <nouislider #sliderRef
             [config]="sliderConfig"
             [(ngModel)]="range"
+            (ngModelChange)="onSliderChanges($event)"
         ></nouislider>
     </div>
 </div>

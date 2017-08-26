@@ -18,15 +18,20 @@ export class JobsService {
         return Promise.reject(error.message || error);
     }
 
-    public getJobs(settings: Object): Promise<Object[]> {
+    public getJobs(settings: Object, range: number[]): Promise<Object[]> {
+        console.log(range);
         return this.getRawData(settings)
             .then(response => response.json().jobs.map(
                 job => {
-                    job['timestamp'] = new Date(job['timestamp']);
+                    job['timestamp'] = new Date(job['timestamp']).getTime();
                     job['values']['jobs'] = 1;
                     return job;
                 }
             ) as Object[])
+            .then(jobs => jobs
+                .filter(
+                    job => job['timestamp'] >= range[0] && job['timestamp'] <= range[1]
+                ))
             .then(jobs => jobs
                 .reduce((acc, job) => {
                     const key: string = job['properties'][settings['property']];
@@ -68,7 +73,7 @@ export class JobsService {
     }
 
     public getPartialJobs(settings: Object, fraction: number, timeFrameWidthAsFraction: number): Promise<Object[]> {
-        return this.getJobs(settings)
+        return this.getJobs(settings, [0, 1])
             .then(jobs => jobs
                 .reduce((acc, job) => {
                     acc['min'] = (acc['min'] === undefined || job['timestamp'] < acc['min']) ? job['timestamp'] : acc['min'];
