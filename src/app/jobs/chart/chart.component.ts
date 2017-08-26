@@ -1,4 +1,4 @@
-import { DefaultFormatter, NouisliderModule } from 'ng2-nouislider/src/nouislider';
+import { DefaultFormatter, NouisliderModule, NouiFormatter } from 'ng2-nouislider/src/nouislider';
 import { SimpleChanges } from '@angular/core/src/metadata/lifecycle_hooks';
 import { JobOptions } from '../jobs-options';
 import { distinct } from 'rxjs/operator/distinct';
@@ -10,6 +10,17 @@ import { NouisliderComponent } from 'ng2-nouislider';
 import { MaterializeDirective } from 'angular2-materialize';
 
 import 'rxjs/add/operator/distinctUntilChanged';
+
+export class LocaleDateTimeFormatter implements NouiFormatter {
+  to(value: number): string {
+    const date = new Date(value);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString().replace(' ', '');
+  };
+
+  from(value: string): number {
+    return 0;
+  }
+}
 
 @Component({
   selector: 'app-chart',
@@ -35,7 +46,8 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
       'max': [ 1 ]
     },
     start: [],
-    step: 1
+    step: 1,
+    tooltips: [ new LocaleDateTimeFormatter(), new LocaleDateTimeFormatter() ]
   }
 
   public range: number[] = [0, 1];
@@ -114,12 +126,12 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
         const oldStartFraction = (this.range[0] - oldMinTimestamp) / oldPeriod;
         const oldEndFraction = (this.range[1] - oldMinTimestamp) / oldPeriod;
 
+        const resolution = periodSettings['resolution'] * 1000
         const minTimestamp = new Date(periodSettings['min']).getTime();
-        const maxTimestamp = new Date(periodSettings['max']).getTime();
+        const maxTimestamp = new Date(periodSettings['max']).getTime() + resolution;
         this.sliderConfig['range']['min'] = [ minTimestamp ];
         this.sliderConfig['range']['max'] = [ maxTimestamp ];
 
-        const resolution = periodSettings['resolution'] * 1000
         this.sliderConfig['step'] = resolution;
 
         const period = maxTimestamp - minTimestamp;
