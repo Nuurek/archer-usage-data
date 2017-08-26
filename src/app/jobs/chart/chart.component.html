@@ -20,7 +20,10 @@
                         materialize="material_select"
                         [materializeSelectOptions]="chartOptions.propertyOptions"
                     >
-                        <option *ngFor="let option of chartOptions.propertyOptions" [value]="option.value">{{option.name}}</option>
+                        <option 
+                            *ngFor="let option of chartOptions.propertyOptions"
+                            [value]="option.value"
+                        >{{option.name}}</option>
                     </select>
                     <label>Property</label>
                 </div>
@@ -32,9 +35,13 @@
                         materialize="material_select"
                         [materializeSelectOptions]="chartOptions.axisOptions"
                     >
-                        <option *ngFor="let option of chartOptions.axisOptions" [value]="option.value">{{option.name}}</option>
+                        <option
+                            *ngFor="let option of chartOptions.axisOptions"
+                            [value]="option.value"
+                        >{{option.name}}</option>
                     </select>
                     <label>X Axis</label>
+                    
                 </div>
             </div>
             <div class="row">

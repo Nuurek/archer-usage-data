@@ -48,11 +48,23 @@ export class JobsService {
                             acc['x'] += values[settings['xAxis']];
                             acc['y'] += values[settings['yAxis']];
                             acc['r'] += values[settings['bubbleSize']];
+                            acc['number_of_jobs']++;
                             return acc;
-                        }, { 'x': 0, 'y': 0, 'r': 0, 'name': group['name'] })];
+                        }, { 'x': 0, 'y': 0, 'r': 0, 'name': group['name'], number_of_jobs: 0 })];
                     return group;
                 })
             )
+            /*
+            .then(groups => groups
+                .map(group => {
+                    console.log(group);
+                    group['series'][0]['x'] = group['series'][0]['x'] / group['series'][0]['number_of_jobs'];
+                    group['series'][0]['y'] = group['series'][0]['y'] / group['series'][0]['number_of_jobs'];
+                    group['series'][0]['r'] = group['series'][0]['r'] / group['series'][0]['number_of_jobs'];
+                    return group;
+                })
+            )
+            */
             .catch(this.handleError);
     }
 

@@ -16,7 +16,7 @@ export class JobOptions {
   ];
 
   axisOptions = [
-    { value: 'jobs', name: 'Jobs'},
+    { value: 'jobs', name: 'Jobs', disabled: true},
     { value: 'nodes' , name: 'Nodes' },
     { value: 'memory' , name: 'Memory [GB]' },
     { value: 'power' , name: 'Power [W]' },
