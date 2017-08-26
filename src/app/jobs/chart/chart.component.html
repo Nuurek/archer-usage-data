@@ -65,7 +65,7 @@
     </div>
     <div class="col s9">
         <div class="bubble-chart container">
-            <ngx-charts-bubble-chart
+            <ngx-charts-bubble-chart #bubbleChart
                 [view]="[800, 400]"
                 [results]="jobs"
                 [autoScale]="true"
@@ -73,6 +73,8 @@
                 [showYAxisLabel]="showYAxisLabel"
                 [xAxisLabel]="xAxisLabel"
                 [yAxisLabel]="yAxisLabel"
+                [minRadius]="20"
+                [maxRadius]="30"
             ></ngx-charts-bubble-chart>
             <div class="container">
             </div>
