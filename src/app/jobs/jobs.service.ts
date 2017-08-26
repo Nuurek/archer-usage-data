@@ -23,12 +23,13 @@ export class JobsService {
             .then(response => response.json().jobs.map(
                 job => {
                     job['timestamp'] = new Date(job['timestamp']);
+                    job['values']['jobs'] = 1;
                     return job;
                 }
             ) as Object[])
             .then(jobs => jobs
                 .reduce((acc, job) => {
-                    const key: string = job['classes'][settings['dataClass']];
+                    const key: string = job['properties'][settings['property']];
                     acc[key] = acc[key] || { name: key, series: [] };
                     acc[key]['series'].push(job);
                     return acc;
@@ -42,13 +43,9 @@ export class JobsService {
                             const values = job['values']
                             acc['x'] += values[settings['xAxis']];
                             acc['y'] += values[settings['yAxis']];
-                            acc['field'] += values[settings['bubbleSize']];
+                            acc['r'] += values[settings['bubbleSize']];
                             return acc;
-                        }, { 'x': 0, 'y': 0, 'field': 0, 'name': group['name'] })];
-                    return group;
-                })
-                .map(group => {
-                    group['series'][0]['r'] = Math.sqrt(group['series'][0]['field']);
+                        }, { 'x': 0, 'y': 0, 'r': 0, 'name': group['name'] })];
                     return group;
                 })
             )

@@ -71,7 +71,7 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
   private createForm(): any {
     const initialValues = {
       period: this.chartOptions.periodOptions[0].value,
-      dataClass: this.chartOptions.classOptions[0].value,
+      property: this.chartOptions.propertyOptions[0].value,
       xAxis: this.chartOptions.axisOptions[0].value,
       yAxis: this.chartOptions.axisOptions[1].value,
       bubbleSize: this.chartOptions.axisOptions[2].value
@@ -80,7 +80,6 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
     this.settings = this.chartForm.getRawValue();
 
     this.chartForm.valueChanges
-      .distinctUntilChanged()
       .subscribe(data => this.onChartChanges(data));
 
     this.chartForm.controls['period'].valueChanges.subscribe(data => this.onPeriodChanges(data));
@@ -158,11 +157,10 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
   }
 
   ngOnChanges(changes: SimpleChanges)	{
-    console.log(changes);
   }
 
   private updateJobs(data) {
-    this.jobsService.getJobs(this.settings).then(jobs => {
+    this.jobsService.getJobs(data).then(jobs => {
       this.xAxisLabel = this.getAxisName(data['xAxis']);
       this.yAxisLabel = this.getAxisName(data['yAxis']);
       this.jobs = jobs;
