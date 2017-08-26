@@ -75,7 +75,21 @@
                 [yAxisLabel]="yAxisLabel"
                 [minRadius]="20"
                 [maxRadius]="30"
-            ></ngx-charts-bubble-chart>
+            >
+                <ng-template #tooltipTemplate let-model="model">
+                    <div class="tooltip">
+                        <p class="title">
+                            {{ model.name }}
+                        </p>
+                        <p class="value">
+                            {{ getTooltipValue(model.radius) }}
+                        </p>
+                        <p class="label">
+                            {{ getAxisName(chartForm.controls['bubbleSize'].value) }}
+                        </p>
+                    </div>
+                </ng-template>
+            </ngx-charts-bubble-chart>
             <div class="container">
             </div>
         </div>

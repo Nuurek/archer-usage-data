@@ -16,8 +16,8 @@ export class JobOptions {
   ];
 
   axisOptions = [
-    { value: 'jobs', name: 'Jobs [pc.]'},
-    { value: 'nodes' , name: 'Nodes [pc.]' },
+    { value: 'jobs', name: 'Jobs'},
+    { value: 'nodes' , name: 'Nodes' },
     { value: 'memory' , name: 'Memory [GB]' },
     { value: 'power' , name: 'Power [W]' },
     { value: 'runtime' , name: 'Runtime [h]' },

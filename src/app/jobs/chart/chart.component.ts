@@ -170,4 +170,22 @@ export class ChartComponent implements OnInit, OnChanges, AfterContentInit {
   private getAxisName(value: string) {
     return this.chartOptions.axisOptions.filter(option => option['value'] === value)[0]['name'];
   }
+
+  private getTooltipValue(value: number): string {
+    const axis = this.chartForm.controls['bubbleSize'].value;
+    const hourAndMinutesFormatter = val => {
+      const h = (val / 60).toFixed(0);
+      const m = (val % 60).toFixed(0);
+      return h + 'h ' + m + 'm';
+    }
+    const formatters = {
+      nodes: val => val,
+      jobs: val => val,
+      memory: val => val.toFixed(1),
+      power: val => val.toFixed(2),
+      runtime: hourAndMinutesFormatter,
+      queue_time: hourAndMinutesFormatter
+    }
+    return formatters[axis](value);
+  }
 }
