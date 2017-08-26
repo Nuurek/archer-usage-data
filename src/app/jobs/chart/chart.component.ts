@@ -4,7 +4,7 @@ import { JobOptions } from '../jobs-options';
 import { distinct } from 'rxjs/operator/distinct';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { JobsService } from '../jobs.service';
-import { AfterContentInit, Component, ElementRef, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { AfterContentInit, Component, ElementRef, HostListener, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { NouisliderComponent } from 'ng2-nouislider';
 import { MaterializeDirective } from 'angular2-materialize';
@@ -25,13 +25,14 @@ export class LocaleDateTimeFormatter implements NouiFormatter {
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
-  styleUrls: ['./chart.component.scss']
+  styleUrls: ['./chart.component.scss'],
 })
 export class ChartComponent implements OnInit, AfterContentInit {
   jobs: Object[] = [];
 
-  public fraction = 0.05;
-  frameWidth = 0.2;
+  chartWidth = 800;
+  chartHeight = 450;
+  valignWrapper = true;
   showXAxisLabel = true;
   showYAxisLabel = true;
   xAxisLabel = 'Memory usage [MB]';
@@ -96,7 +97,6 @@ export class ChartComponent implements OnInit, AfterContentInit {
   }
 
   private onChartChanges(data) {
-    console.log(data);
     this.patchDistinctFields(data);
     this.updateJobs();
     // update settings so that it can be compared after next change
@@ -130,6 +130,23 @@ export class ChartComponent implements OnInit, AfterContentInit {
     this.updatePeriodSettings();
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.resizeChart();
+  }
+
+  private resizeChart() {
+    if (window.innerWidth > 992) {
+      this.chartWidth = 0.5 * window.innerWidth;
+      this.chartHeight = 0.6 * window.innerHeight;
+      this.valignWrapper = true;
+    } else {
+      this.chartWidth = 0.9 * window.innerWidth;
+      this.chartHeight = 0.7 * window.innerHeight;
+      this.valignWrapper = false;
+    }
+  }
+
   private updatePeriodSettings() {
     this.jobsService.getPeriodSettings(this.chartForm.getRawValue())
       .then(periodSettings => {
@@ -159,6 +176,7 @@ export class ChartComponent implements OnInit, AfterContentInit {
   }
 
   ngOnInit() {
+    this.resizeChart();
   }
 
   ngAfterContentInit() {
